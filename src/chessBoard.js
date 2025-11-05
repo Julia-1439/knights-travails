@@ -5,19 +5,14 @@ class ChessBoard {
     this.#board = Array.from({ length: 8 }, (_, i) =>
       Array.from({ length: 8 }, (_, j) => new Square(i, j))
     );
-    
-    this.#createKnightGraph();
+
+    this.#drawKnightGraph();
   }
 
   // Create the edges for the possible knight movements
-  #createKnightGraph() {
-    this.#board.forEach((row, i) => {
-      row.forEach((square, j) => {
-        square.edges.push(...validKnightMoves(i, j));
-      });
-    });
-
-    function validKnightMoves(i, j) {
+  #drawKnightGraph() {
+    const validKnightMoves = (i, j) => {
+      // chose an anonymous function to keep the `this` context (didn't end up using)
       return [
         [i + 2, j - 1],
         [i + 2, j + 1],
@@ -29,9 +24,18 @@ class ChessBoard {
         [i - 1, j + 2],
       ].filter(
         ([potentialI, potentialJ]) =>
-          potentialI > 0 && potentialI < 8 && potentialJ > 0 && potentialJ < 8
+          potentialI >= 0 &&
+          potentialI <= 7 &&
+          potentialJ >= 0 &&
+          potentialJ <= 7
       );
-    }
+    };
+
+    this.#board
+      .flat()
+      .forEach((square) =>
+        square.neighbors.push(...validKnightMoves(square.i, square.j))
+      );
   }
 
   knightMoves(pos1, pos2) {}
