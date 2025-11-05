@@ -80,8 +80,8 @@ class ChessBoard {
 
     // Clean up
     this.#board.flat().forEach((square) => {
-      square.visited;
-      square.prev = null;
+      delete square.visited;
+      delete square.prev;
     });
 
     return shortestPath;
